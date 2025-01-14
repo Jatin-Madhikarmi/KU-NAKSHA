@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kathmandu University Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    #map {
+      height: 500px; /* Set the height of the map */
+      width: 100%; /* Set the width of the map */
+    }
+  </style>
+</head>
+<body>
+  <h1>Map of Kathmandu University</h1>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize the map and set its view to Kathmandu University
+    var map = L.map('map').setView([27.6194, 85.5372], 17); // Latitude, Longitude, Zoom level
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add a marker for Kathmandu University
+    var kuMarker = L.marker([27.6194, 85.5372]).addTo(map);
+
+    // Add a popup to the marker
+    kuMarker.bindPopup("<b>Kathmandu University</b><br>Dhulikhel, Nepal").openPopup();
+
+    // Add a circle to highlight the surrounding area
+    var circle = L.circle([27.6194, 85.5372], {
+      color: 'blue',
+      fillColor: '#1E90FF',
+      fillOpacity: 0.5,
+      radius: 200 // Radius in meters
+    }).addTo(map);
+
+    // Add a GeoJSON layer (optional, for custom features)
+    var geojsonFeature = {
+      "type": "Feature",
+      "properties": {
+        "name": "Kathmandu University",
+        "popupContent": "This is Kathmandu University."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [85.5372, 27.6194] // Note: GeoJSON uses [longitude, latitude] order
+      }
+    };
+
+    L.geoJSON(geojsonFeature).addTo(map);
+  </script>
+</body>
+</html>

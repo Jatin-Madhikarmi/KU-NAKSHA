@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet 3D Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        .elevation-control {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([51.505, -0.09], 13);
+
+        // Add OSM base layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add custom 3D effect using elevation data
+        function add3DEffect(feature, layer) {
+            const elevation = feature.properties.elevation || 0;
+            const color = getColorByElevation(elevation);
+            
+            layer.setStyle({
+                fillColor: color,
+                fillOpacity: 0.7,
+                color: '#666',
+                weight: 1
+            });
+
+            // Add popup with elevation info
+            layer.bindPopup(`Elevation: ${elevation}m`);
+        }
+
+        // Helper function to get color based on elevation
+        function getColorByElevation(elevation) {
+            return elevation > 1000 ? '#fff' :
+                   elevation > 750  ? '#ccc' :
+                   elevation > 500  ? '#999' :
+                   elevation > 250  ? '#666' :
+                                    '#333';
+        }
+
+        // Add custom elevation control
+        const ElevationControl = L.Control.extend({
+            options: {
+                position: 'topright'
+            },
+
+            onAdd: function(map) {
+                const container = L.DomUtil.create('div', 'elevation-control');
+                container.innerHTML = `
+                    <h4>Elevation Legend</h4>
+                    <div>
+                        > 1000m: White<br>
+                        750-1000m: Light Gray<br>
+                        500-750m: Gray<br>
+                        250-500m: Dark Gray<br>
+                        0-250m: Very Dark Gray
+                    </div>
+                `;
+                return container;
+            }
+        });
+
+        new ElevationControl().addTo(map);
+
+        // Example of adding GeoJSON data with elevation
+        const sampleGeoJSON = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "properties": {
+                    "elevation": 850
+                },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [-0.09, 51.505],
+                        [-0.08, 51.505],
+                        [-0.08, 51.51],
+                        [-0.09, 51.51],
+                        [-0.09, 51.505]
+                    ]]
+                }
+            }]
+        };
+
+        L.geoJSON(sampleGeoJSON, {
+            onEachFeature: add3DEffect
+        }).addTo(map);
+    </script>
+</body>
+</html>
