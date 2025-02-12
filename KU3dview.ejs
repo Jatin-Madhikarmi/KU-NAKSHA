@@ -8,6 +8,37 @@
 </head>
 <body>
 
+
+    <form action="/search" method="get">
+        <input type="text" name="search">
+        <button type="submit" location-id="<% typeof result !== 'undefined' ? result.id : '' %>"
+            location-name="<% typeof result !== 'undefined' ? result.name : '' %>"
+            location-lat="<% typeof result !== 'undefined' ? result.lat : '' %>"
+            location-lon="<% typeof result !== 'undefined' ? result.lon : '' %>"
+            location-alt="<% typeof result !== 'undefined' ? result.alt : '' %>">Search</button>
+    </form>
+
+    <div id="cesiumContainer"></div>
+    <script type="module">
+
+        // Select the button
+        let button = document.querySelector("#searchButton");
+
+        // Get custom attributes
+        let locationId = button.getAttribute("location-id");
+        let locationName = button.getAttribute("location-name");
+        let locationLat = button.getAttribute("location-lat");
+        let locationLon = button.getAttribute("location-lon");
+        let locationAlt = button.getAttribute("location-alt");
+
+        // Debugging
+        console.log("Location ID:", locationId);
+        console.log("Location Name:", locationName);
+        console.log("Latitude:", locationLat);
+        console.log("Longitude:", locationLon);
+        console.log("Altitude:", locationAlt);
+
+
   <div id="cesiumContainer"></div>
   <script type="module">
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3MDE5ODhlOS1lYjE4LTRhYTItYTYwOC1hYmI4MmIyYTJhNjUiLCJpZCI6MjYyNTQ0LCJpYXQiOjE3MzQyNTE4OTh9.XKt4Ola_5IvKAFjl3Ka1BerJfDUMCqcTiG_3omuN9Rk';
@@ -243,24 +274,3 @@ try {
 }
 
   </script>
-
-<form action="/search" method="get">
-    <input type="text" name="search">
-    <button type="submit" location-id="<% typeof result !== "undefined" ? result.id : "" % Location-name="">Search</button>
-</form>
-</body>
-</html>
-
-
-const id = .getAttribute('Location-id');
-
-<% if (typeof autocompleteSuggestions !== "undefined" && autocompleteSuggestions.length > 0) { %>
-    <% autocompleteSuggestions.forEach(function(suggestion) { %>
-        <li>
-            <div class="autocom-name" name="<%= suggestion.name %>">
-            <%= suggestion.name %>
-            
-            </div>
-        </li>
-        <% }) %>
-        <% }  %>
